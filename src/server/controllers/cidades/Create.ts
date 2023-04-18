@@ -16,14 +16,18 @@ export const create = async(req: Request<{},{}, ICidade>, res:Response) => {
  
 
   try{  
-    valdidateData = await bodyValidation.validate(req.body);
+    valdidateData = await bodyValidation.validate(req.body, { abortEarly:false });
     return res.status(StatusCodes.ACCEPTED).json(valdidateData)
   }catch(error){
     const yupError = error as yup.ValidationError;
-    return res.json({
-      errors: {
-        default: yupError.message,
-      }
+    const validateErrors: Record<string, string> = {}
+
+    yupError.inner.forEach(error => {
+      if(error.path === undefined) return;
+      validateErrors[error.path] = error.message;
+    })
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      errors: validateErrors
     });
   }
 
