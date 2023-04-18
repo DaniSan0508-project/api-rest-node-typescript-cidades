@@ -13,8 +13,7 @@ const bodyValidation: yup.Schema<ICidade> = yup.object().shape({
 });
 
 export const createBodyValidation = validation('body', bodyValidation);
-export const createQueryValidation = validation('query', bodyValidation);
 
 export const create = async(req: Request<{},{}, ICidade>, res:Response) => {
-  return res.status(StatusCodes.ACCEPTED).json(req.body.nome)
+  return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json("Não implementado")
 }; 
